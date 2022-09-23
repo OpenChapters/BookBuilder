@@ -1,0 +1,21 @@
+chapters:
+  Foundations:
+    name: Foundations
+  bascry:
+    name: Basic Crystallography
+    path: Crystallography
+    key: BASCRY
+  crysym:
+    name: Crystallographic Symmetry
+    path: Symmetry
+    key: CRYSYM
+  2drots:
+    name: 2D Rotations
+    path: 2Drotations
+    key: 2DROTS
+  SingleCrystal:
+    name: Properties of Single Crystal Materials
+  matprp:
+    name: What is a Material Property?
+    path: MaterialProperty
+    key: MATPRP

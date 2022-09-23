@@ -1,0 +1,59 @@
+name: LaTeX
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Install packages needed to build LaTeX
+        run: sudo apt-get install -y texlive texlive-latex-extra texlive-fonts-recommended texlive-bibtex-extra texlive-science texlive-pictures texlive-font-utils texlive-pstricks texlive-extra-utils
+
+      - name: Install Python packages needed to build templates
+        run: sudo apt-get install -y python-yaml python-jinja2
+
+      - name: Checkout the OpenChapters repository
+        uses: actions/checkout@v2
+        with:
+          repository: OpenChapters/OpenChapters
+          path: ./OpenChapters
+
+      - name: Show Working directory
+        run: ls
+
+      - name: Jinja2 templating
+        run: python3 template.py
+
+      - name: Copy files into OpenChapters
+        run: |
+          cp main.tex OpenChapters/
+          cp latex/* OpenChapters/
+
+      - name: Compile chapters
+        run: |
+          cd OpenChapters
+          cat src/*/chaptercitations.bib > OpenChapters.bib
+          pdflatex main
+          ls
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: PDF of OpenChapters
+          path: OpenChapters/main.pdf
